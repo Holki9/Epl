@@ -40,6 +40,9 @@ jobs:
           # Явно указываем JAVA_HOME, чтобы Gradle не сломался на конфликте версий
           echo "export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64" >> $GITHUB_ENV
           
+          # FIX: Удаляем старую папку android перед созданием новой (чтобы исправить "android platform already exists")
+          rm -rf android
+          
           # Используем папку 'dist' с собранным сайтом
           npx cap init MyApp com.holki9.app --web-dir=dist
           npx cap add android
