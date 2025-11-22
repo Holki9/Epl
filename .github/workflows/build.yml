@@ -48,9 +48,7 @@ jobs:
           npx cap add android
           
           # FIX 2: Принудительно заменяем настройки Java в Android-проекте на Java 17, чтобы устранить ошибку "invalid source release: 21"
-          echo "android.compileOptions.sourceCompatibility 17" >> android/app/build.gradle
-          echo "android.compileOptions.targetCompatibility 17" >> android/app/build.gradle
-          echo "android.defaultConfig.minSdkVersion 22" >> android/app/build.gradle 
+          sed -i '/compileOptions {/c\    compileOptions {\n        sourceCompatibility JavaVersion.VERSION_17\n        targetCompatibility JavaVersion.VERSION_17\n    }' android/app/build.gradle
           
           # Компиляция финального APK
           cd android
