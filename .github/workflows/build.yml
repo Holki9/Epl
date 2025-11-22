@@ -22,8 +22,8 @@ jobs:
       - name: Install Dependencies & Build Web
         run: |
           npm install
-          # Здесь собирается твой App.tsx в папку dist
-          npm run build
+          # Здесь мы явно вызываем компиляцию TypeScript и сборку Vite
+          npx tsc && npx vite build 
 
       - name: Setup Java
         uses: actions/setup-java@v3
@@ -46,7 +46,7 @@ jobs:
           ./gradlew assembleDebug
 
       - name: Upload APK
-        # ИСПРАВЛЕНИЕ: Обновляем до v4 для устранения ошибки деприкации
+        # Используем версию v4 для устранения ошибки деприкации
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
