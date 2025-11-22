@@ -46,7 +46,8 @@ jobs:
           ./gradlew assembleDebug
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        # ИСПРАВЛЕНИЕ: Обновляем до v4 для устранения ошибки деприкации
+        uses: actions/upload-artifact@v4
         with:
           name: app-debug
           path: android/app/build/outputs/apk/debug/app-debug.apk
