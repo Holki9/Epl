@@ -22,7 +22,7 @@ jobs:
       - name: Install Dependencies & Build Web
         run: |
           npm install
-          # Здесь мы явно вызываем компиляцию TypeScript и сборку Vite
+          # Явно вызываем компиляцию TypeScript и сборку Vite для надежности
           npx tsc && npx vite build 
 
       - name: Setup Java
@@ -37,6 +37,9 @@ jobs:
       - name: Install Capacitor & Build Android
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android
+          # Явно указываем JAVA_HOME, чтобы Gradle не сломался на конфликте версий
+          echo "export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64" >> $GITHUB_ENV
+          
           # Используем папку 'dist' с собранным сайтом
           npx cap init MyApp com.holki9.app --web-dir=dist
           npx cap add android
