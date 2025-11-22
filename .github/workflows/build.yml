@@ -47,11 +47,14 @@ jobs:
           npx cap init MyApp com.holki9.app --web-dir=dist
           npx cap add android
           
-          # FIX 2: Принудительно заменяем настройки Java в Android-проекте на Java 17, чтобы устранить ошибку "invalid source release: 21"
-          sed -i '/compileOptions {/c\    compileOptions {\n        sourceCompatibility JavaVersion.VERSION_17\n        targetCompatibility JavaVersion.VERSION_17\n    }' android/app/build.gradle
-          
           # Компиляция финального APK
           cd android
+          
+          # FIX 2: ФИНАЛЬНЫЙ АГРЕССИВНЫЙ ФИКС JAVA 21
+          # Мы ищем 'compileOptions' и заменяем весь блок, включая Kotlin, на версию 17.
+          # Это то, что предлагает другая нейронка, но автоматизировано.
+          sed -i '/compileOptions {/c\    compileOptions {\n        sourceCompatibility JavaVersion.VERSION_17\n        targetCompatibility JavaVersion.VERSION_17\n    }\n    kotlinOptions {\n        jvmTarget = "17"\n    }' app/build.gradle
+          
           ./gradlew assembleDebug
 
       - name: Upload APK
