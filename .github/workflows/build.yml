@@ -1,0 +1,52 @@
+name: Build Android APK
+
+on:
+  # Запускать при каждом изменении в ветках main или master
+  push:
+    branches: [ main, master ]
+  # Добавляет кнопку "Запустить вручную" на вкладке Actions
+  workflow_dispatch: 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Dependencies & Build Web
+        run: |
+          npm install
+          # Здесь собирается твой App.tsx в папку dist
+          npm run build
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Install Capacitor & Build Android
+        run: |
+          npm install @capacitor/core @capacitor/cli @capacitor/android
+          # Используем папку 'dist' с собранным сайтом
+          npx cap init MyApp com.holki9.app --web-dir=dist
+          npx cap add android
+          
+          # Компиляция финального APK
+          cd android
+          ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk
